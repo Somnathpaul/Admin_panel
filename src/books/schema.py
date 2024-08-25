@@ -25,8 +25,3 @@ class updateBook(BaseModel):
     created_at: datetime
     updated_at: datetime
 
-
-# update book validation model
-class updateBook(BaseModel):
-    name: str
-    author: str
