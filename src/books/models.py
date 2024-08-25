@@ -15,7 +15,7 @@ class Book(SQLModel, table=True):
                       )
     name: str
     author: str
-    #published_date: date
+    published_date: date
     #updated_date: date
 
 

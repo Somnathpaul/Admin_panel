@@ -13,7 +13,7 @@ class bookService:
 
     async def get_all_books(self, session: AsyncSession):
 
-        statement = select(Book).order_by(desc.created_at)
+        statement = select(Book).order_by(desc(Book.published_date))
 
         result = await session.exec(statement)
         return result.all()
@@ -45,10 +45,10 @@ class bookService:
         # create new book
         new_book = Book(**book_data_dict)
 
-        '''new_book.published_date = datetime.strptime(
-            book_data_dict["published_date"], "%Y-%m-%d"
-        )
+        new_book.published_date = datetime.strptime(
+            book_data_dict["published_date"], "%Y-%m-%d")
 
+        '''
         new_book.updated_date = datetime.strptime(
             book_data_dict["updated_date"], "%Y-%m-%d"
         )

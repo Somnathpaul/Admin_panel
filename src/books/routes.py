@@ -25,27 +25,23 @@ book_service = bookService()
 # ------------------------- Routes ----------------------------    
 
 # Get all the books
-@router.get('/all_books', response_model=List[book])
+@router.get('/all_books')
 async def get_all_books(session: AsyncSession = Depends(get_session))-> list:
     books = await book_service.get_all_books(session)
     return books
 
-# create a book
-@router.post('/book', response_model=book)
-async def create_book(book_data : createBook, session: AsyncSession = Depends(get_session)) -> dict:
 
-    new_book = await book_service.create_book(book_data, session)
+@router.post("/",status_code=status.HTTP_201_CREATED,response_model=book)
 
-    # model dump convert object into dict
-    # new_book = book_data.model_dump()
-
-    # books.append(new_book)
-    return new_book
+async def create_a_book(book_data: createBook,
+                        session: AsyncSession = Depends(get_session)) -> dict:
+      new_book = await book_service.create_book(book_data, session)
+      return new_book
 
 
 # Search a book by id
 @router.get('/book/{book_id}', response_model=List[book])
-async def get_book_by_id(book_id:int, session: AsyncSession = Depends(get_session)):
+async def get_book_by_id(book_id:str, session: AsyncSession = Depends(get_session)):
 
     book = await book_service.get_books(book_id, session)
 
@@ -63,7 +59,7 @@ async def get_book_by_id(book_id:int, session: AsyncSession = Depends(get_sessio
 
 # delete a book
 @router.delete('/book/{book_id}', response_model=book)
-async def delete_book(book_id:int, session: AsyncSession = Depends(get_session)) -> dict:
+async def delete_book(book_id:str, session: AsyncSession = Depends(get_session)) -> dict:
 
     delete_book = book_service.delete_book(book_id, session)
 
@@ -88,7 +84,7 @@ async def delete_book(book_id:int, session: AsyncSession = Depends(get_session))
 
 # update a book
 @router.patch('/book/{update_id}', response_model=book)
-async def update_book(book_id: int, updateBook_data: updateBook, 
+async def update_book(book_id:str, updateBook_data: updateBook, 
                       session: AsyncSession = Depends(get_session)) -> dict:
 
     updatedBook = await book_service.update_book(book_id, updateBook_data, session)

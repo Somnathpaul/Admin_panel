@@ -7,7 +7,7 @@ class book(BaseModel):
     id: uuid.UUID
     name: str
     author: str
-    #published_date: date
+    published_date: date
     #updated_date: date
 
 
@@ -15,8 +15,9 @@ class book(BaseModel):
 class createBook(BaseModel):
     name: str
     author: str
-    #published_date: str
+    published_date: str
     #updated_date: str
+    
 
 # update book
 class updateBook(BaseModel):
