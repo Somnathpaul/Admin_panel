@@ -6,7 +6,7 @@ from sqlmodel import select, desc
 from src.books.schema import createBook, updateBook
 from src.books.models import Book
 
-
+from datetime import datetime
 
 
 class bookService:
@@ -39,6 +39,7 @@ class bookService:
 
         # create new book
         new_book = Book(**book_data_dict)
+        #new_book.created_at
 
         # add new data to the database
         session.add(new_book)
@@ -63,7 +64,7 @@ class bookService:
             await session.commit()
             return book_update
         else:
-            return {"Message": "Error. No book found"}
+            return None
 
     async def delete_book(self, book_uuid: str, session: AsyncSession):
         
@@ -75,7 +76,7 @@ class bookService:
 
             await session.commit()
 
-            return {"message": "Book deleted"}
+            return {}
 
         else:
-            return {"message": "Not found"}
+            return None

@@ -51,5 +51,5 @@ app = FastAPI(
 )
 
 
-app.include_router(router)
+
 app.include_router(router, prefix=f"{version_prefix}/books", tags=["books"])
