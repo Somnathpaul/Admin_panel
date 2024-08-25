@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime, date
+from datetime import date
 import uuid
 
 # create book validation model
@@ -8,21 +8,19 @@ class book(BaseModel):
     name: str
     author: str
     published_date: date
-    created_at: datetime
-    updated_at: datetime
+    updated_date: date
 
 
 # create a book 
 class createBook(BaseModel):
     name: str
     author: str
-    created_at: datetime
-    updated_at: datetime
+    published_date: date
+    updated_date: date
 
 # update book
 class updateBook(BaseModel):
     name: str
     author: str
-    created_at: datetime
-    updated_at: datetime
+    updated_date: date
 
