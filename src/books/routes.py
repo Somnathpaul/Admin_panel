@@ -1,61 +1,22 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Depends
 from typing import Optional, List
 from pydantic import BaseModel
 from fastapi.exceptions import HTTPException
 
+
+
+
 from src.books.schema import book, updateBook
 from src.books.data import books
+from src.books.service import bookService
+
+# session function 
+from src.db.main import get_session
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 
 router = APIRouter()
-
-
-
-
-
-
-
-
-
-@router.get('/')
-async def read_root():
-    return {'Message': 'Hello World'}
-
-
-@router.get('/app/{name}')
-async def name(name:str) -> dict:
-    return {'message': f'hello {name}'}
-
-
-@router.get('/app')
-async def letsee(name:str) -> dict:
-    return {'message': f'hello {name}'}
-
-@router.get('/web/{name}')
-async def mix(name:str, age:int) -> dict:
-    return {'message': f'hello {name}', 'age': age}
-
-@router.get('/secure')
-async def secure(name:Optional[str] = 'None', location: str = 'None', number:int = 0) -> dict:
-    return {'name': name, 'location': location, 'number' : number}
-
-
-
-class UserSchemas_create_account(BaseModel):
-    name: str
-    email: str
-    password: str
-
-
-@router.post('/create_account')
-async def create_account(user_data : UserSchemas_create_account ) -> dict:
-    new_user = {
-        'name': user_data.name,
-        'email': user_data.email,
-        'password': user_data.password
-    }
-    return new_user
-
+book_service = bookService()
 
 
 
@@ -66,15 +27,20 @@ async def create_account(user_data : UserSchemas_create_account ) -> dict:
 
 # Get all the books
 @router.get('/all_books')
-async def get_all_books()-> list:
+async def get_all_books(session: AsyncSession = Depends(get_session))-> list:
+    books = book_service.get_all_books(session)
     return books
 
 # create a book
 @router.post('/book')
-async def create_book(book_data : book) -> dict:
-    new_book = book_data.model_dump() # model dump convert object into dict
+async def create_book(book_data : book, session: AsyncSession = Depends(get_session)) -> dict:
 
-    books.append(new_book)
+    new_book = book_service.create_book(book_data, session)
+
+    # model dump convert object into dict
+    # new_book = book_data.model_dump()
+
+    # books.append(new_book)
     return new_book
 
 
