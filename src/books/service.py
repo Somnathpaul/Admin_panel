@@ -6,7 +6,7 @@ from sqlmodel import select, desc
 from src.books.schema import createBook, updateBook
 from src.books.models import Book
 
-from datetime import datetime
+from datetime import datetime, date
 
 
 class bookService:
@@ -22,7 +22,12 @@ class bookService:
 
     async def get_books(self, book_uuid:str, session: AsyncSession):
 
-        statement = select(Book).where(Book.uuid == book_uuid)
+        statement = (
+            select(Book)
+            .where(Book.book_uuid == book_uuid)
+            .order_by(desc(Book.published_date))
+        )
+
 
         result = await session.exec(statement)
         book = result.first()
@@ -39,6 +44,16 @@ class bookService:
 
         # create new book
         new_book = Book(**book_data_dict)
+
+        '''new_book.published_date = datetime.strptime(
+            book_data_dict["published_date"], "%Y-%m-%d"
+        )
+
+        new_book.updated_date = datetime.strptime(
+            book_data_dict["updated_date"], "%Y-%m-%d"
+        )
+        '''
+
         #new_book.created_at
 
         # add new data to the database

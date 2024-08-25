@@ -6,8 +6,7 @@ from fastapi.exceptions import HTTPException
 
 
 
-from src.books.schema import book, updateBook
-from src.books.data import books
+from src.books.schema import book, updateBook, createBook
 from src.books.service import bookService
 
 # session function 
@@ -26,14 +25,14 @@ book_service = bookService()
 # ------------------------- Routes ----------------------------    
 
 # Get all the books
-@router.get('/all_books')
+@router.get('/all_books', response_model=List[book])
 async def get_all_books(session: AsyncSession = Depends(get_session))-> list:
     books = await book_service.get_all_books(session)
     return books
 
 # create a book
-@router.post('/book')
-async def create_book(book_data : book, session: AsyncSession = Depends(get_session)) -> dict:
+@router.post('/book', response_model=book)
+async def create_book(book_data : createBook, session: AsyncSession = Depends(get_session)) -> dict:
 
     new_book = await book_service.create_book(book_data, session)
 
@@ -45,8 +44,8 @@ async def create_book(book_data : book, session: AsyncSession = Depends(get_sess
 
 
 # Search a book by id
-@router.get('/book/{book_id}')
-async def get_book_by_id(book_id:int, session: AsyncSession = Depends(get_session)) ->dict:
+@router.get('/book/{book_id}', response_model=List[book])
+async def get_book_by_id(book_id:int, session: AsyncSession = Depends(get_session)):
 
     book = await book_service.get_books(book_id, session)
 
@@ -63,7 +62,7 @@ async def get_book_by_id(book_id:int, session: AsyncSession = Depends(get_sessio
 
 
 # delete a book
-@router.delete('/book/{book_id}')
+@router.delete('/book/{book_id}', response_model=book)
 async def delete_book(book_id:int, session: AsyncSession = Depends(get_session)) -> dict:
 
     delete_book = book_service.delete_book(book_id, session)
@@ -88,7 +87,7 @@ async def delete_book(book_id:int, session: AsyncSession = Depends(get_session))
 
 
 # update a book
-@router.patch('/book/{update_id}')
+@router.patch('/book/{update_id}', response_model=book)
 async def update_book(book_id: int, updateBook_data: updateBook, 
                       session: AsyncSession = Depends(get_session)) -> dict:
 

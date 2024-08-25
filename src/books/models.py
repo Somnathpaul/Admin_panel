@@ -1,5 +1,5 @@
 from sqlmodel import SQLModel, Field, Column
-from datetime import datetime, date
+from datetime import date
 
 import uuid
 import sqlalchemy.dialects.postgresql as pg
@@ -15,8 +15,8 @@ class Book(SQLModel, table=True):
                       )
     name: str
     author: str
-    published_date: date
-    updated_date: date
+    #published_date: date
+    #updated_date: date
 
 
     def __repr__(self):
