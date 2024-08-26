@@ -3,8 +3,8 @@ from datetime import date
 import uuid
 
 # create book validation model
-class book(BaseModel):
-    id: uuid.UUID
+class Book(BaseModel):
+    uid: uuid.UUID
     name: str
     author: str
     published_date: date

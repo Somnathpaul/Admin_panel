@@ -6,7 +6,7 @@ from fastapi.exceptions import HTTPException
 
 
 
-from src.books.schema import book, updateBook, createBook
+from src.books.schema import Book, updateBook, createBook
 from src.books.service import bookService
 
 # session function 
@@ -31,25 +31,20 @@ async def get_all_books(session: AsyncSession = Depends(get_session))-> list:
     return books
 
 
-@router.post("/",status_code=status.HTTP_201_CREATED,response_model=book)
+@router.post("/",status_code=status.HTTP_201_CREATED, response_model=Book)
 
 async def create_a_book(book_data: createBook,
-                        session: AsyncSession = Depends(get_session)) -> dict:
+                        session: AsyncSession = Depends(get_session)) -> list:
       new_book = await book_service.create_book(book_data, session)
       return new_book
 
 
 # Search a book by id
-@router.get('/book/{book_id}', response_model=List[book])
+@router.get('/book/{book_id}', response_model=Book)
 async def get_book_by_id(book_id:str, session: AsyncSession = Depends(get_session)):
 
     book = await book_service.get_books(book_id, session)
 
-    '''
-    for book in books:
-        if book['id'] == book_id:
-            return book
-    '''
     if book:
         return book
     else:
@@ -58,8 +53,8 @@ async def get_book_by_id(book_id:str, session: AsyncSession = Depends(get_sessio
 
 
 # delete a book
-@router.delete('/book/{book_id}', response_model=book)
-async def delete_book(book_id:str, session: AsyncSession = Depends(get_session)) -> dict:
+@router.delete('/book/{book_id}')
+async def delete_book_by_id(book_id:str, session: AsyncSession = Depends(get_session)):
 
     delete_book = book_service.delete_book(book_id, session)
 
@@ -71,19 +66,9 @@ async def delete_book(book_id:str, session: AsyncSession = Depends(get_session))
     
 
 
-    '''
-    for book in books:
-        if book['id'] == book_id:
-            books.remove(book)
-            return {'message':'book deleted'}
-        
-    return {'message': f'book with id {book_id} not found'}
-    '''
-
-
 
 # update a book
-@router.patch('/book/{update_id}', response_model=book)
+@router.patch('/book/{update_id}', response_model=Book)
 async def update_book(book_id:str, updateBook_data: updateBook, 
                       session: AsyncSession = Depends(get_session)) -> dict:
 
@@ -96,13 +81,3 @@ async def update_book(book_id:str, updateBook_data: updateBook,
                         detail= f'Book id {book_id} not found')
 
 
-    '''
-    for book in books:
-        if book['id'] == book_id:
-            book['name'] = updateBook_data.name
-            book['author'] = updateBook_data.author
-
-            return book
-    '''
-        
-    return {'message': f'book with id {book_id} not found'}

@@ -24,7 +24,7 @@ class bookService:
 
         statement = (
             select(Book)
-            .where(Book.book_uuid == book_uuid)
+            .where(Book.uid== book_uuid)
             .order_by(desc(Book.published_date))
         )
 
@@ -48,13 +48,7 @@ class bookService:
         new_book.published_date = datetime.strptime(
             book_data_dict["published_date"], "%Y-%m-%d")
 
-        '''
-        new_book.updated_date = datetime.strptime(
-            book_data_dict["updated_date"], "%Y-%m-%d"
-        )
-        '''
 
-        #new_book.created_at
 
         # add new data to the database
         session.add(new_book)
