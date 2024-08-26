@@ -52,20 +52,8 @@ async def get_book_by_id(book_id:str, session: AsyncSession = Depends(get_sessio
                         detail= 'Book id not found')
 
 
-# delete a book
-@router.delete('/book/{book_id}')
-async def delete_book_by_id(book_id:str, session: AsyncSession = Depends(get_session)):
 
-    delete_book = book_service.delete_book(book_id, session)
-
-    if delete_book:
-        return {"message": "Book deleted"}
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail= f'Book id {book_id} not found')
     
-
-
 
 # update a book
 @router.patch('/book/{update_id}', response_model=Book)
@@ -81,3 +69,16 @@ async def update_book(book_id:str, updateBook_data: updateBook,
                         detail= f'Book id {book_id} not found')
 
 
+
+
+# delete a book
+@router.delete('/delete/{book_id}')
+async def delete_book_by_id(book_id:str, session: AsyncSession = Depends(get_session)):
+
+    delete_book = book_service.delete_book(book_id, session)
+
+    if delete_book:
+        return {"message": "Book deleted"}
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                        detail= f'Book id {book_id} not found')
