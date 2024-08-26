@@ -75,6 +75,8 @@ class bookService:
         else:
             return None
 
+
+
     async def delete_book(self, book_uuid:str, session: AsyncSession):
 
         # get book data

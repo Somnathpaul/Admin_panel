@@ -31,16 +31,10 @@ async def get_all_books(session: AsyncSession = Depends(get_session))-> list:
     return books
 
 
-@router.post("/",status_code=status.HTTP_201_CREATED, response_model=Book)
-
-async def create_a_book(book_data: createBook,
-                        session: AsyncSession = Depends(get_session)) -> list:
-      new_book = await book_service.create_book(book_data, session)
-      return new_book
 
 
 # Search a book by id
-@router.get('/book/{book_id}', response_model=Book)
+@router.get('/search/{book_id}', response_model=Book)
 async def get_book_by_id(book_id:str, session: AsyncSession = Depends(get_session)):
 
     book = await book_service.get_books(book_id, session)
@@ -52,11 +46,19 @@ async def get_book_by_id(book_id:str, session: AsyncSession = Depends(get_sessio
                         detail= 'Book id not found')
 
 
+# create a book 
+@router.post("create/book/",status_code=status.HTTP_201_CREATED, response_model=Book)
+
+async def create_a_book(book_data: createBook,
+                        session: AsyncSession = Depends(get_session)) -> list:
+      new_book = await book_service.create_book(book_data, session)
+      return new_book
+
 
     
 
 # update a book
-@router.patch('/book/{update_id}', response_model=Book)
+@router.patch('/update/{update_id}', response_model=Book)
 async def update_book(book_id:str, updateBook_data: updateBook, 
                       session: AsyncSession = Depends(get_session)) -> dict:
 
